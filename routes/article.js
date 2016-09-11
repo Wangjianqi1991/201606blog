@@ -3,7 +3,8 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/add', function(req, res, next) {
-    res.send('增加文章');
+    //res.send('增加文章');
+    res.render('article/add',{title:'增加文章'})
 });
 
 

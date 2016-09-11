@@ -7,9 +7,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 //解析cookie的 req.cookie
 var cookieParser = require('cookie-parser');
+var session=require('express-session');
 // 解析请求体的 req.body 它会把请求头中cookie取出来
 var bodyParser = require('body-parser');
-
+require('./db');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var article=require('./routes/article');
@@ -19,7 +20,8 @@ var app = express();
 //设置模板的存放目录
 app.set('views', path.join(__dirname, 'views'));
 //设置模板引擎
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
+app.engine('html',require('ejs').__express);
 
 // uncomment after placing your favicon in /public
 
@@ -33,6 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // 解析cookie
 app.use(cookieParser());
 //静态文件中间件 当前请求到来的时候 先去public目录下去找 找到就返回 找不到则继续next
+app.use(session({
+  resave:true,//每次请求都要重新保存session
+  saveUninitialized:true,//保存初始化的session
+  secret:'wang'//密钥
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 //第一个参数表示以这个路径开头
 app.use('/', routes);
